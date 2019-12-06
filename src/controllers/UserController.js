@@ -1,10 +1,12 @@
 'use strict'
 var User   = require('../models/Modeluser');
 var fs = require('fs');
-var path  = require('path')
-var moment = require('moment')
+var path  = require('path');
+var mongoosePaginate = require('mongoose-pagination');
+var moment = require('moment');
 var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../services/jwt');
+
 
 
 var userController  = {
@@ -190,20 +192,19 @@ var userController  = {
 
    
     },
-    listUsers(req,res){
+     listUsers(req, res) {
         var page = 1
-        var itemsperPage = 10
-        if(req.params.page)
-        {
+        var itemsPerPage = 10;
+        if (req.params.page) {
             page = req.params.page
         }
-        User.find().paginate(page,itemsperPage,(err,response)=>{
-            if( err) return res.status(500).send({ message:"Error al recibir datos"})
-            if(!response) return res.status(404).send({message:"No hay datos para mostrar"});
-            return res.status(200).send({Users:Response})
+        User.find().paginate(page, itemsPerPage, (err, response) => {
+            if (err) return res.status(500).send({ response: 'error al listar los usuarios -- ' + err })
+            if (!response) return res.status(404).send({ response: 'No se ha encontrado el usuario' });
+            return res.status(200).send({ response })
         })
-
     },
+    
     Uploadfile(req,res){
         var userid = req.params.id;
         var file_name = "File not uploaded";
