@@ -26,7 +26,7 @@ var userController  = {
         user.surname  = campos.surname;
         user.nick  = campos.nick;
         user.email = campos.email;
-        user.role = campos.nick;
+        user.role = "user";
         user.password  = campos.password,
         user.file = null;
         user.status = false,
@@ -130,6 +130,7 @@ var userController  = {
 
 
     },
+    
     login(req,res){
         var params  = req.body;
         var email  = params.email;
@@ -169,6 +170,8 @@ var userController  = {
 
                         user.password = undefined
                         res.status(200).send({
+                            code:200,
+                            message:"lOGIN CORRECTO",
                             token:jwt.createToken(user)
                         })
               
@@ -198,7 +201,7 @@ var userController  = {
         if (req.params.page) {
             page = req.params.page
         }
-        User.find().paginate(page, itemsPerPage, (err, response) => {
+        User.find({}).paginate(page, itemsPerPage, (err, response) => {
             if (err) return res.status(500).send({ response: 'error al listar los usuarios -- ' + err })
             if (!response) return res.status(404).send({ response: 'No se ha encontrado el usuario' });
             return res.status(200).send({ response })
